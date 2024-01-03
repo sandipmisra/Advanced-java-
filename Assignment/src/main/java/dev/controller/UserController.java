@@ -18,7 +18,8 @@ public class UserController {
 
 
     @InitBinder
-    public void initBinder(WebDataBinder webDataBinder) {
+    public void initBinder(WebDataBinder webDataBinder) 
+    {
         StringTrimmerEditor stringTrimmerEditor = new StringTrimmerEditor(true);
         webDataBinder.registerCustomEditor(String.class, stringTrimmerEditor);
     }
@@ -26,37 +27,39 @@ public class UserController {
 
 
     @GetMapping("/taxcalculator")
-    public String showTaxCalculatorForm(HttpSession session) {
-        // Check if the session attribute is present
+    public String showTaxCalculatorForm(HttpSession session) 
+    {
+        //session attribute
 
         return "taxcalculator";
     }
 
     @PostMapping("/calculateTax")
     public String calculateTax(@RequestParam String category, @RequestParam double totalIncome,
-                               HttpSession session, Model model) {
+                               HttpSession session, Model model)
+    {
 
 
-        // Create IncomeBreakDown object
+        // IncomeBreakDown object
         IncomeBreakDown incomeBreakDown = new IncomeBreakDown(totalIncome, 0, 0, 0, 0, 0);
 
         // Calculate breakdown
         incomeBreakDown.calculateBreakDown();
 
-        // Get the breakdown values
+        //breakdown
         double basicPay = incomeBreakDown.getBasicPay();
         double houseRent = incomeBreakDown.getHouseRent();
         double medicalAllowance = incomeBreakDown.getMedicalAllowance();
         double conveyanceAllowance = incomeBreakDown.getConveyanceAllowance();
         double bonus = incomeBreakDown.getBonus();
 
-        // Create TaxCalculator object
+        //TaxCalculator object
         TaxCalculator taxCalculator = new TaxCalculator(totalIncome, category);
 
-        // Calculate tax
+        
         double calculatedTax = taxCalculator.calculateTax();
 
-        // Add attributes to the model
+        //model
         model.addAttribute("category", category);
         model.addAttribute("totalIncome", totalIncome);
         model.addAttribute("calculatedTax", calculatedTax);
@@ -66,7 +69,6 @@ public class UserController {
         model.addAttribute("conveyanceAllowance", conveyanceAllowance);
         model.addAttribute("bonus", bonus);
 
-        // Return the view name
         return "taxresult";
     }
 }
